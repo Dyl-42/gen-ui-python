@@ -5,8 +5,8 @@ import { EndpointsContext } from "./agent";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "LangChain Gen UI",
-  description: "Generative UI application with LangChain Python",
+  title: "Edd: eDesk's Data Analysis Agent",
+  description: "Edd: eDesk's Data Analysis Agent",
 };
 
 export default function RootLayout(props: { children: ReactNode }) {

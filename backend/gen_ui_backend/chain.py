@@ -12,6 +12,9 @@ from gen_ui_backend.tools.github import github_repo
 from gen_ui_backend.tools.invoice import invoice_parser
 from gen_ui_backend.tools.weather import weather_data
 
+from gen_ui_backend.tools.code_interpreter import code_interpreter_tool
+
+
 
 class GenerativeUIState(TypedDict, total=False):
     input: HumanMessage
@@ -21,7 +24,6 @@ class GenerativeUIState(TypedDict, total=False):
     """A list of parsed tool calls."""
     tool_result: Optional[dict]
     """The result of a tool call."""
-
 
 def invoke_model(state: GenerativeUIState, config: RunnableConfig) -> GenerativeUIState:
     tools_parser = JsonOutputToolsParser()
@@ -35,8 +37,8 @@ def invoke_model(state: GenerativeUIState, config: RunnableConfig) -> Generative
             MessagesPlaceholder("input"),
         ]
     )
-    model = ChatOpenAI(model="gpt-4o", temperature=0, streaming=True)
-    tools = [github_repo, invoice_parser, weather_data]
+    model = ChatOpenAI(model="gpt-4o", temperature=0.7, streaming=True)
+    tools = [github_repo, invoice_parser, weather_data, code_interpreter_tool]
     model_with_tools = model.bind_tools(tools)
     chain = initial_prompt | model_with_tools
     result = chain.invoke({"input": state["input"]}, config)
@@ -65,6 +67,7 @@ def invoke_tools(state: GenerativeUIState) -> GenerativeUIState:
         "github-repo": github_repo,
         "invoice-parser": invoice_parser,
         "weather-data": weather_data,
+        "code-interpreter": code_interpreter_tool,
     }
 
     if state["tool_calls"] is not None:

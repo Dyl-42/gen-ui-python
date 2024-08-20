@@ -9,6 +9,7 @@ import {
   CurrentWeatherLoading,
   CurrentWeather,
 } from "@/components/prebuilt/weather";
+import { CodeInterpreterLoading, CodeInterpreterResult } from "@/components/prebuilt/code_interpreter"; // Add import for Code Interpreter components
 import { createStreamableUI, createStreamableValue } from "ai/rsc";
 import { AIMessage } from "@/ai/message";
 
@@ -36,6 +37,10 @@ const TOOL_COMPONENT_MAP: ToolComponentMap = {
     loading: (props?: any) => <CurrentWeatherLoading {...props} />,
     final: (props?: any) => <CurrentWeather {...props} />,
   },
+  "code-interpreter": {  // Add the code interpreter tool here
+    loading: (props?: any) => <CodeInterpreterLoading {...props} />,
+    final: (props?: any) => <CodeInterpreterResult {...props} />,
+  },
 };
 
 async function agent(inputs: {
@@ -54,13 +59,6 @@ async function agent(inputs: {
   let selectedToolComponent: ToolComponent | null = null;
   let selectedToolUI: ReturnType<typeof createStreamableUI> | null = null;
 
-  /**
-   * Handles the 'invoke_model' event by checking for tool calls in the output.
-   * If a tool call is found and no tool component is selected yet, it sets the
-   * selected tool component based on the tool type and appends its loading state to the UI.
-   *
-   * @param output - The output object from the 'invoke_model' event
-   */
   const handleInvokeModelEvent = (
     event: StreamEvent,
     fields: EventHandlerFields,
@@ -88,12 +86,6 @@ async function agent(inputs: {
     }
   };
 
-  /**
-   * Handles the 'invoke_tools' event by updating the selected tool's UI
-   * with the final state and tool result data.
-   *
-   * @param output - The output object from the 'invoke_tools' event
-   */
   const handleInvokeToolsEvent = (event: StreamEvent) => {
     const [type] = event.event.split("_").slice(2);
     if (
@@ -111,14 +103,6 @@ async function agent(inputs: {
     }
   };
 
-  /**
-   * Handles the 'on_chat_model_stream' event by creating a new text stream
-   * for the AI message if one doesn't exist for the current run ID.
-   * It then appends the chunk content to the corresponding text stream.
-   *
-   * @param streamEvent - The stream event object
-   * @param chunk - The chunk object containing the content
-   */
   const handleChatModelStreamEvent = (
     event: StreamEvent,
     fields: EventHandlerFields,
