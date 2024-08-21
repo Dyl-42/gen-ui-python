@@ -31,6 +31,8 @@ export function CodeInterpreterLoading(): JSX.Element {
 }
 
 export function CodeInterpreterResult(props: CodeInterpreterResultProps): JSX.Element {
+  console.log("Artifacts:", props.artifacts);  // Add this line to check what's being passed
+
   return (
     <Card className="w-[450px]">
       <CardHeader>
@@ -60,7 +62,7 @@ export function CodeInterpreterResult(props: CodeInterpreterResultProps): JSX.El
               {props.artifacts.map((artifact, index) => (
                 <div key={index} className="relative w-[100px] h-[100px] m-2">
                   <Image
-                    src={`/charts/${artifact}`}  // Prepend "/charts/" to the artifact filename
+                    src={`/charts/${artifact}`}  // <-- Ensure correct URL
                     alt={`Artifact ${index + 1}`}
                     layout="fill"
                     objectFit="contain"

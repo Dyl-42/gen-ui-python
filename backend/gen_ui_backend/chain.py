@@ -32,12 +32,12 @@ def invoke_model(state: GenerativeUIState, config: RunnableConfig) -> Generative
             (
                 "system",
                 "You are a helpful assistant. You're provided a list of tools, and an input from the user.\n"
-                + "Your job is to determine whether or not you have a tool which can handle the users input, or respond with plain text.",
+                + "Your job is to determine whether or not you have a tool which can handle the users input, or respond with helpful text.",
             ),
             MessagesPlaceholder("input"),
         ]
     )
-    model = ChatOpenAI(model="gpt-4o", temperature=0.7, streaming=True)
+    model = ChatOpenAI(model="gpt-4o", temperature=1, streaming=True)
     tools = [github_repo, invoice_parser, weather_data, code_interpreter_tool]
     model_with_tools = model.bind_tools(tools)
     chain = initial_prompt | model_with_tools

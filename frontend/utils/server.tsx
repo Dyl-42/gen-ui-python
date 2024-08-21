@@ -72,6 +72,7 @@ export function streamRunnableUI<RunInput, RunOutput>(
     // to the client thanks to RSC
     const resolveValue =
       lastEventValue?.data.output || lastEventValue?.data.chunk?.data?.output;
+    console.log('Resolve Value:', resolveValue); // Debugging line
     resolve(resolveValue);
     Object.values(callbacks).forEach((cb) => cb.done());
     ui.done();

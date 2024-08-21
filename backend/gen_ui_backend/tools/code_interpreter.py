@@ -35,6 +35,7 @@ def save_artifact(artifact):
     return artifact_filename  # Return only the filename
 
 
+# Initialize the E2B Data Analysis Tool with environment variables and callbacks
 e2b_data_analysis_tool = E2BDataAnalysisTool(
     env_vars={"MY_SECRET": "secret_value"},  # Example of passing environment variables
     on_stdout=lambda stdout: print("stdout:", stdout),
@@ -69,4 +70,3 @@ def code_interpreter_tool(code: str) -> CodeExecutionResult:
         stderr=result.get('stderr'),
         artifacts=artifacts
     )
-
